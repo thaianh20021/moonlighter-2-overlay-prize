@@ -1,0 +1,6 @@
+pytesseract
+mss
+Pillow
+numpy
+rapidfuzz
+keyboard

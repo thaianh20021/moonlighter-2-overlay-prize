@@ -1,0 +1,22 @@
+{
+  "scan_frequency": 0.5,
+  "hotkey": "f6",
+  "ocr_languages": [
+    "en"
+  ],
+  "ocr_region_offset": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0
+  },
+  "fuzzy_match_threshold": 80,
+  "overlay_opacity": 0.9,
+  "custom_ocr_region": {
+    "left": 1076,
+    "top": 732,
+    "width": 355,
+    "height": 71
+  },
+  "use_custom_region": true
+}
