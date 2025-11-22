@@ -40,6 +40,8 @@ The new version uses **Tesseract OCR** instead of EasyOCR, which means:
 - **F6** - Scan item (read item name and display price)
 - **F5** - Select custom OCR region (if needed)
 - **F4** - Toggle overlay visibility (show/hide)
+- **F3** - Toggle view mode (Compact/Detailed)
+- **ESC** - Quit application
 - **Click overlay** - Toggle between compact and detailed view
 
 ## 📖 How to Use

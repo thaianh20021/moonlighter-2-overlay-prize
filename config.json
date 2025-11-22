@@ -13,10 +13,10 @@
   "fuzzy_match_threshold": 80,
   "overlay_opacity": 0.9,
   "custom_ocr_region": {
-    "left": 1076,
-    "top": 732,
-    "width": 355,
-    "height": 71
+    "left": 1050,
+    "top": 702,
+    "width": 583,
+    "height": 102
   },
   "use_custom_region": true
 }

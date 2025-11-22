@@ -63,19 +63,30 @@ def prepare_tesseract():
     
     # Create bundle directory
     bundle_dir = os.path.join(os.path.dirname(__file__), 'tesseract_bundle')
-    os.makedirs(bundle_dir, exist_ok=True)
+    if os.path.exists(bundle_dir):
+        shutil.rmtree(bundle_dir)
+    os.makedirs(bundle_dir)
     
-    # Copy essential files only
+    # Copy ENTIRE Tesseract directory to ensure all DLLs are included
     print(f"\n[Preparing Tesseract Bundle]")
+    print(f"Copying Tesseract from: {tesseract_source}")
     
-    # Copy tesseract.exe
-    src_exe = os.path.join(tesseract_source, 'tesseract.exe')
-    dst_exe = os.path.join(bundle_dir, 'tesseract.exe')
-    if os.path.exists(src_exe):
-        shutil.copy2(src_exe, dst_exe)
-        print(f"✓ Copied tesseract.exe ({os.path.getsize(dst_exe) / 1024 / 1024:.1f} MB)")
+    # Copy everything except tessdata (we'll handle tessdata separately to save space)
+    for item in os.listdir(tesseract_source):
+        src_path = os.path.join(tesseract_source, item)
+        dst_path = os.path.join(bundle_dir, item)
+        
+        if item.lower() == 'tessdata':
+            continue
+            
+        if os.path.isfile(src_path):
+            shutil.copy2(src_path, dst_path)
+        elif os.path.isdir(src_path):
+            shutil.copytree(src_path, dst_path)
+            
+    print(f"✓ Copied Tesseract binaries and DLLs")
     
-    # Copy tessdata (English only to minimize size)
+    # Handle tessdata (English only)
     tessdata_src = os.path.join(tesseract_source, 'tessdata')
     tessdata_dst = os.path.join(bundle_dir, 'tessdata')
     os.makedirs(tessdata_dst, exist_ok=True)
@@ -87,9 +98,16 @@ def prepare_tesseract():
     
     if os.path.exists(src_lang):
         shutil.copy2(src_lang, dst_lang)
-        print(f"✓ Copied {eng_file} ({os.path.getsize(dst_lang) / 1024 / 1024:.1f} MB)")
-    else:
-        print(f"⚠️ Warning: {eng_file} not found")
+        print(f"✓ Copied {eng_file}")
+    
+    # Also copy osd.traineddata if exists (useful for orientation)
+    osd_file = 'osd.traineddata'
+    src_osd = os.path.join(tessdata_src, osd_file)
+    dst_osd = os.path.join(tessdata_dst, osd_file)
+    
+    if os.path.exists(src_osd):
+        shutil.copy2(src_osd, dst_osd)
+        print(f"✓ Copied {osd_file}")
     
     return bundle_dir
 
@@ -119,9 +137,8 @@ def build_exe():
         '--add-data=data.json;.',
         '--add-data=config.json;.',
         
-        # Bundle Tesseract
-        f'--add-binary={os.path.join(tesseract_bundle, "tesseract.exe")};tesseract',
-        f'--add-data={os.path.join(tesseract_bundle, "tessdata")};tesseract/tessdata',
+        # Bundle Tesseract (Entire folder)
+        f'--add-data={tesseract_bundle};tesseract',
         
         # Hidden imports (force include)
         '--hidden-import=pytesseract',

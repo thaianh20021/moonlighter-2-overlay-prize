@@ -48,6 +48,7 @@ class MoonlighterOverlay:
         print(f"Press {self.config['hotkey'].upper()} to scan item")
         print("Press F5 to select custom OCR region")
         print("Press F4 to toggle overlay visibility")
+        print("Press F3 to toggle view mode")
         print("Press ESC to quit application")
         print("=" * 50 + "\n")
     
@@ -68,16 +69,19 @@ class MoonlighterOverlay:
         hotkey_scan = self.config.get('hotkey', 'f6')
         hotkey_select = 'f5'  # Region selection hotkey
         hotkey_toggle = 'f4'  # Visibility toggle hotkey
+        hotkey_view = 'f3'    # View mode toggle hotkey
         hotkey_quit = 'esc'   # Quit application hotkey
         
         keyboard.add_hotkey(hotkey_scan, self.toggle_scanning)
         keyboard.add_hotkey(hotkey_select, self.select_region)
         keyboard.add_hotkey(hotkey_toggle, self.toggle_visibility)
+        keyboard.add_hotkey(hotkey_view, self.toggle_view_mode)
         keyboard.add_hotkey(hotkey_quit, self.quit_application)
         
         print(f"Hotkey registered: {hotkey_scan.upper()} (scan item)")
         print(f"Hotkey registered: {hotkey_select.upper()} (select OCR region)")
         print(f"Hotkey registered: {hotkey_toggle.upper()} (toggle visibility)")
+        print(f"Hotkey registered: {hotkey_view.upper()} (toggle view mode)")
         print(f"Hotkey registered: {hotkey_quit.upper()} (quit application)")
     
     def select_region(self):
@@ -117,6 +121,12 @@ class MoonlighterOverlay:
             self.visible = True
             print("\n👀 Overlay visible")
     
+    def toggle_view_mode(self):
+        """Toggle view mode (F3)"""
+        self.overlay.toggle_mode()
+        mode = "Compact" if self.overlay.compact_mode else "Detailed"
+        print(f"\n🔄 View mode: {mode}")
+
     def quit_application(self):
         """Quit the application (ESC)"""
         print("\n👋 Shutting down...")
