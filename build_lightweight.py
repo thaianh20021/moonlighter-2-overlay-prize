@@ -123,15 +123,19 @@ def build_exe():
         f'--add-binary={os.path.join(tesseract_bundle, "tesseract.exe")};tesseract',
         f'--add-data={os.path.join(tesseract_bundle, "tessdata")};tesseract/tessdata',
         
-        # Hidden imports (only what we need)
+        # Hidden imports (force include)
         '--hidden-import=pytesseract',
         '--hidden-import=mss',
         '--hidden-import=PIL',
+        '--hidden-import=PIL.Image',
         '--hidden-import=PIL.ImageEnhance',
         '--hidden-import=numpy',
         '--hidden-import=rapidfuzz',
         '--hidden-import=keyboard',
         '--hidden-import=tkinter',
+        
+        # Collect all submodules of pytesseract
+        '--collect-all=pytesseract',
         
         # EXCLUDE heavy packages
         '--exclude-module=torch',
@@ -147,6 +151,7 @@ def build_exe():
         '--exclude-module=pytest',
         '--exclude-module=pip',
         '--exclude-module=setuptools',
+        '--exclude-module=distutils',
         
         # Additional options
         '--clean',
